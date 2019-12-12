@@ -46,7 +46,7 @@ function romanNumerals(number) {
     romanNumber += res[1];
     number = res[0];
     
-    console.log(romanNumber, number)
+    console.log('DECEM', romanNumber, number)
 
     res = getQuinque(number);
     romanNumber += res[1];
@@ -55,7 +55,8 @@ function romanNumerals(number) {
     console.log(romanNumber, number)
 
     res = getUnus(number);
-    romanNumber += res;
+    romanNumber += res[1];
+    number = res[0];
     
      console.log(romanNumber)
     return romanNumber;
@@ -69,9 +70,7 @@ function getMilles(number){
         roman = C + M;    
         number -= (m-c);
     }else{
-       for(var i=0; i<div; i++){
-            roman += M;
-        }
+        roman = appendNumeral(M, div);
         number = number - div*m;
     }
     if(number < m && number >= m-c){
@@ -80,9 +79,12 @@ function getMilles(number){
     }
     
     return [number, roman];
+
 }
 
 function getQuingenti(number){
+    return getQuinNumber(number, d, c, d, D, C, D);  
+
     var roman = '';
     
     if(number < d && number >= d-c){
@@ -97,109 +99,64 @@ function getQuingenti(number){
 }
 
 function getCentum(number){
-    var div = Math.floor(number/c);
-    var roman = '';
-    
-    if(number >= d-c){
-        roman = C + D;    
-        number -= (d-c);
-    }else{
-       for(var i=0; i<div; i++){
-            roman += C;
-        }
-    }
-    number = number - div*c;
-    return [number, roman];
+    return getDecNumber(number, c, d, C, D);
 }
 
 function getQuinquaginta(number){
-    var roman = '';
-    
-    if(number < 50) return [number, roman];
-    if(number >= c-x){
-        roman = X + C;    
-        number -= (c-x);
-    }else{
-       roman = L;
-       number -= l;
-    }
-    
-    return [number, roman];
+    return getQuinNumber(number, l, x, c, L, X, C);  
 }
 
 function getDecem(number){
-    
-    var div = Math.floor(number/x);
-    var roman = '';
-    
-    if(div == (l-x)/x){
-        roman = X + L;    
-    }else{
-        for(var i=0; i<div; i++){
-            roman += X;
-        }
-    }
-    
-    number = number - div*x;
-    return [number, roman];
+    return getDecNumber(number, x, l, X, L);
 }
 
 function getQuinque(number){    
+    return getQuinNumber(number, v, i, x, V, I, X);    
+}
+
+function getQuinNumber(number, actualValue, lastValue, nextValue, actualNumeral, lasNumeral, nextNumeral){
     var roman = '';
     
-    if(number < v){
+    if(number < actualValue){
         return [number, roman];
     }
-    if(number == x-i){
-        roman = I + X;  
+    if(number >= nextValue-lastValue){
+        roman = lasNumeral + nextNumeral;  
         number = 0;
     } else {
-        roman = V;
-        number -= v;
+        roman = actualNumeral;
+        number -= actualValue;
     }
     
     return [number, roman];
-    
 }
 
 function getUnus(number){
+    return getDecNumber(number, i, v, I, V);
+}
+
+function getDecNumber(number, actualValue, nextValue, actualNumeral, nextNumeral){
+    var div = Math.floor(number/actualValue);
     var roman = '';
-    
-    if(number == 4){
-        roman = I + V;
+    console.log(actualValue, nextValue, nextValue-actualValue)
+    if(number >= nextValue-actualValue){
+        roman = actualNumeral + nextNumeral;    
+        number -= (nextValue-actualValue);
     }else{
-        for(var i=0; i<number; i++){
-            roman += I;        
-        }
+        roman = appendNumeral(actualNumeral, div);
+        number = number - div*actualValue;
     }
-    
+    return [number, roman];
+}
+
+function appendNumeral(numeral, number){
+    var roman = '';
+    for(var i=0; i<number; i++){
+        roman += numeral;        
+    }
     return roman;
 }
 
-function getNumber(number, numeral, index){
-    /*
-    console.log(number, numeral, index)
-    var div = Math.floor(number/numeral); 
-    var res = number%numeral;
-    var roman = '';
-    
-    console.log(div, index, strArray[index])
-    if(div >= 4){
-        roman += strArray[index] + strArray [index+1];
-        number = number-(div*numeral);
-    }else if(div == 0){
-        roman = '';
-        number = number;
-    } else {
-        for(var i=0; i<div; i++)
-            roman += strArray[index];
-        number = number-(div*numeral) - res;
-    }
-    
-    console.log('----', number, div, numeral)
-    return [number, roman];
-    */
-}
 
 
 
